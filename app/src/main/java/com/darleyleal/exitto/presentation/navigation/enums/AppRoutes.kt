@@ -1,9 +1,10 @@
 package com.darleyleal.exitto.presentation.navigation.enums
 
 enum class AppRoutes {
-    LoginScreen,
+    StartScreen,
     HomeScreen,
     HabitsScreen,
     AnalyticsScreen,
-    ProfileScreen
+    ProfileScreen,
+    MainScreen
 }

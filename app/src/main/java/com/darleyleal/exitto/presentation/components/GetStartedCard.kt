@@ -15,7 +15,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,15 +26,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.darleyleal.exitto.R
-import com.darleyleal.exitto.data.data_store.UserStore
+import com.darleyleal.exitto.data.data_store.UserDataStore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
-fun AuthenticationCard(modifier: Modifier = Modifier, getStartedButtonOnClick: () -> Unit) {
-
+fun GetStartedCard(modifier: Modifier = Modifier, getStartedButtonOnClick: () -> Unit) {
     val context = LocalContext.current
-    val store = UserStore(context)
-    val token = store.getAccessToken.collectAsState(initial = false)
-
+    val store = UserDataStore(context)
     RoundedTopCard(
         modifier = modifier
             .fillMaxWidth()
@@ -64,7 +63,10 @@ fun AuthenticationCard(modifier: Modifier = Modifier, getStartedButtonOnClick: (
                     .height(62.dp)
                     .fillMaxHeight(),
                 onClick = {
-                    getStartedButtonOnClick()
+                    CoroutineScope(Dispatchers.Main).launch {
+                        getStartedButtonOnClick()
+                        store.saveToken(token = true)
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Black.copy(alpha = 0.2f))
             ) {
