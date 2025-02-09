@@ -1,4 +1,4 @@
-package com.darleyleal.exitto.presentation.screens
+package com.darleyleal.exitto.presentation.screens.start
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -7,13 +7,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import com.darleyleal.exitto.R
 import com.darleyleal.exitto.presentation.components.AuthenticationCard
 import com.darleyleal.exitto.presentation.components.ExittoImageCard
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(modifier: Modifier = Modifier, onNavigationToMainScreen: () -> Unit) {
     Column(
         modifier = modifier
             .fillMaxHeight()
@@ -21,6 +19,6 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             .background(color = Color.White)
     ) {
         ExittoImageCard()
-        AuthenticationCard(title = "Welcome", dontHaveAnAccount = true)
+        AuthenticationCard(getStartedButtonOnClick = { onNavigationToMainScreen() })
     }
 }
