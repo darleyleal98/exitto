@@ -27,9 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.darleyleal.exitto.R
 import com.darleyleal.exitto.data.model.User
+import com.darleyleal.exitto.domain.utils.welcomeMessage
 
 @Composable
-fun WelcomeInformations(modifier: Modifier = Modifier, user: User? = null) {
+fun WelcomeInformations(modifier: Modifier = Modifier, user: User) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -61,13 +62,13 @@ fun WelcomeInformations(modifier: Modifier = Modifier, user: User? = null) {
             ) {
                Column {
                    Text(
-                       text = "Hello, ${user?.name}",
+                       text = "Hello, ${user.name}",
                        fontSize = 24.sp,
                        fontWeight = FontWeight.W700,
                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                    )
                    Text(
-                       text = "Good morning",
+                       text = welcomeMessage(),
                        fontSize = 28.sp,
                        fontWeight = FontWeight.W700,
                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
