@@ -1,0 +1,1 @@
+export const COTTONBRO = require('../images/pexels-cottonbro.jpg');
