@@ -3,15 +3,24 @@ import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
 import { COTTONBRO } from "@/assets/images";
 import { ImageBackground } from "expo-image";
-import { SplashScreen } from "expo-router";
 import { useFonts, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const StartScreen = () => {
     const [fontLoaded] = useFonts({ Poppins_700Bold })
     const navigate = useNavigation();
 
+    const storeData = async () => {
+        try {
+            await AsyncStorage.setItem('access', JSON.stringify({ accessed: true }));
+        } catch (error) {
+            console.log('Error', error);
+        }
+    };
+
     const navigateToHomeScreen = () => {
+        storeData()
         //@ts-ignore
         navigate.navigate('Home')
     };
