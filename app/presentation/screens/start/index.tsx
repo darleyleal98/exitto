@@ -5,9 +5,16 @@ import { COTTONBRO } from "@/assets/images";
 import { ImageBackground } from "expo-image";
 import { SplashScreen } from "expo-router";
 import { useFonts, Poppins_700Bold } from '@expo-google-fonts/poppins';
+import { useNavigation } from "@react-navigation/native";
 
 const StartScreen = () => {
-    let [fontLoaded] = useFonts({ Poppins_700Bold })
+    const [fontLoaded] = useFonts({ Poppins_700Bold })
+    const navigate = useNavigation();
+
+    const navigateToHomeScreen = () => {
+        //@ts-ignore
+        navigate.navigate('Home')
+    };
 
     if (!fontLoaded) {
         return null;
@@ -29,7 +36,9 @@ const StartScreen = () => {
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity
                                 activeOpacity={0.8}
-                                style={styles.button}>
+                                style={styles.button}
+                                onPress={navigateToHomeScreen}
+                            >
                                 <Text style={[styles.textButton, { fontFamily: 'Poppins_700Bold' }]}>
                                     Get Started
                                 </Text>
