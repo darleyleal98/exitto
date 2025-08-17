@@ -1,4 +1,4 @@
-package com.darleyleal.exitto.ui.theme
+package com.darleyleal.exitto.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
