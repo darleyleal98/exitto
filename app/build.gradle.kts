@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.darleyleal.exittp"
+    namespace = "com.darleyleal.exitto"
     compileSdk = 36
 
     defaultConfig {

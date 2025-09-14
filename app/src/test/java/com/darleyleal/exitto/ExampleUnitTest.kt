@@ -1,4 +1,4 @@
-package com.darleyleal.exittp
+package com.darleyleal.exitto
 
 import org.junit.Test
 
