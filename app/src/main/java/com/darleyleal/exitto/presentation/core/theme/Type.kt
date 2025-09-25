@@ -1,4 +1,4 @@
-package com.darleyleal.exitto.ui.theme
+package com.darleyleal.exitto.presentation.core.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

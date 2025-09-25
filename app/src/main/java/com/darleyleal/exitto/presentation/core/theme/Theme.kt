@@ -1,4 +1,4 @@
-package com.darleyleal.exitto.ui.theme
+package com.darleyleal.exitto.presentation.core.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

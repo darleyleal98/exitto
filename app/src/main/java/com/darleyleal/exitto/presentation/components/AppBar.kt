@@ -1,0 +1,20 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
+package com.darleyleal.exitto.presentation.components
+
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextRange
+
+@Composable
+fun AppBar(modifier: Modifier = Modifier) {
+    TopAppBar(
+        title = {
+            Text(text = "Teste")
+        }
+    )
+}
