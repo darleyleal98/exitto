@@ -1,6 +1,7 @@
 package com.darleyleal.exitto.presentation.screens.main
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -13,6 +14,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.darleyleal.exitto.presentation.navigation.bottomNavigationList
 import com.darleyleal.exitto.presentation.screens.analytics.AnalyticsScreen
@@ -27,10 +30,6 @@ import com.darleyleal.exitto.presentation.screens.profile.ProfileScreen
 fun MainScreen(modifier: Modifier = Modifier, navController: NavHostController) {
     var selected by rememberSaveable { mutableIntStateOf(0) }
     Scaffold(
-        modifier = modifier,
-        topBar = {
-
-        },
         content = {
             when (selected) {
                 0 -> HomeScreen(modifier)
@@ -41,7 +40,9 @@ fun MainScreen(modifier: Modifier = Modifier, navController: NavHostController) 
             }
         },
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                containerColor = Color.Transparent,
+            ) {
                 bottomNavigationList.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = selected == index,
