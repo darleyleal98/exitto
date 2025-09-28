@@ -20,7 +20,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -28,9 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.darleyleal.exitto.presentation.screens.profile.components.ProfileAvatar
 import com.darleyleal.exitto.presentation.core.theme.RichBlack
 import com.darleyleal.exitto.presentation.screens.profile.components.EditProfileForm
+import com.darleyleal.exitto.presentation.screens.profile.components.ProfileAvatar
 import com.darleyleal.exitto.presentation.screens.profile.components.ProfileSectionCards
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,8 +37,7 @@ import com.darleyleal.exitto.presentation.screens.profile.components.ProfileSect
 @Composable
 fun ProfileScreen(modifier: Modifier = Modifier) {
     var showIsEditableBottomSheet by rememberSaveable { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     Scaffold(
         content = { innerPadding ->
             Box(
@@ -83,11 +81,13 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                     ProfileSectionCards()
                     if (showIsEditableBottomSheet) {
                         ModalBottomSheet(
+                            modifier = Modifier.fillMaxSize().padding(top = innerPadding.calculateTopPadding()),
                             onDismissRequest = { showIsEditableBottomSheet = false },
-                            sheetState = sheetState
+                            sheetState = sheetState,
+                            containerColor = RichBlack
                         ) {
                             ProfileAvatar(isEditable = true)
-                            EditProfileForm {}
+                            EditProfileForm()
                         }
                     }
                 }

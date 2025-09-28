@@ -1,20 +1,36 @@
 package com.darleyleal.exitto.presentation.screens.profile.components
 
-import DatePickerField
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.darleyleal.exitto.domain.entity.Sex
 import com.darleyleal.exitto.domain.entity.User
-import java.time.Instant
+import com.darleyleal.exitto.presentation.components.DateField
 import java.time.LocalDate
 import java.time.ZoneId
 
@@ -22,25 +38,17 @@ import java.time.ZoneId
 @Composable
 fun EditProfileForm(
     modifier: Modifier = Modifier,
-    user: User? = null,                       // Opcional: preencher campos existentes
-    onSubmit: (User) -> Unit = {}              // Callback para salvar os dados
+    user: User? = null,
+    onSubmit: (User) -> Unit = {}
 ) {
-    // ---------- Estados do formulário ----------
     var name by rememberSaveable { mutableStateOf(user?.name ?: "") }
     var dateOfBirth by rememberSaveable { mutableStateOf(user?.dateOfBirthday ?: LocalDate.now()) }
     var height by rememberSaveable { mutableStateOf(user?.heightCm?.toString() ?: "") }
     var weight by rememberSaveable { mutableStateOf(user?.weightKg?.toString() ?: "") }
 
-    // ---------- Dropdown para Sexo ----------
     var expanded by remember { mutableStateOf(false) }
     var selectedSex by rememberSaveable { mutableStateOf(user?.sex ?: Sex.MALE) }
     val sexOptions = Sex.entries.toTypedArray()
-
-    // ---------- DatePicker ----------
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = dateOfBirth.atStartOfDay(ZoneId.systemDefault())
-            .toInstant().toEpochMilli()
-    )
 
     Column(
         modifier = modifier
@@ -58,13 +66,6 @@ fun EditProfileForm(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
-        )
-
-        // DATE OF BIRTH
-        DatePickerField(
-            label = "Date of Birth",
-            selectedDate = dateOfBirth,
-            onDateSelected = { dateOfBirth = it }
         )
 
         // SEX
@@ -100,6 +101,14 @@ fun EditProfileForm(
             }
         }
 
+        DateField(
+            label = "Date of Birth",
+            selectedDate = dateOfBirth,
+            onDateSelected = { newDate ->
+                dateOfBirth = newDate
+            }
+        )
+
         // HEIGHT
         OutlinedTextField(
             value = height,
@@ -126,6 +135,7 @@ fun EditProfileForm(
 
         // SUBMIT BUTTON
         Button(
+            modifier = Modifier.height(52.dp).fillMaxWidth(),
             onClick = {
                 if (name.isNotBlank() && height.isNotBlank() && weight.isNotBlank()) {
                     onSubmit(
@@ -140,9 +150,10 @@ fun EditProfileForm(
                     )
                 }
             },
-            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Save")
+            Icon(imageVector = Icons.Default.Check, contentDescription = null)
+            Spacer(modifier = Modifier.padding(start = 8.dp))
+            Text("Save", fontSize = 20.sp)
         }
     }
 }
