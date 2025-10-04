@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "292497826147",
+    "project_id": "exitto-e05e5",
+    "storage_bucket": "exitto-e05e5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:292497826147:android:5ea4fe5fc0113bf8adf356",
+        "android_client_info": {
+          "package_name": "com.darleyleal.exittp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "292497826147-ctqbkc1jqa1k795800q1opvcceh70mcm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa6Q1aWPFdkGYkF6yh2KACpj3NgwPOcYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "292497826147-ctqbkc1jqa1k795800q1opvcceh70mcm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

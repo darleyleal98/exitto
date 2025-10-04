@@ -5,7 +5,7 @@ import java.time.LocalDate
 enum class Sex { MALE, FEMALE, OTHER }
 
 data class User(
-    val id: String,
+    val id: Int,
     val name: String,
     val dateOfBirthday: LocalDate,
     val sex: Sex,

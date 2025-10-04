@@ -1,15 +1,16 @@
 package com.darleyleal.exitto.data.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDate
 
 @Entity(tableName = "users")
 data class UserEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey val id: Int,
     val name: String,
-    val dateOfBirthday: LocalDate,
+    @ColumnInfo(name = "date_of_birthday") val dateOfBirthday: LocalDate,
     val sex: String,
-    val heightCm: Double,
-    val weightKg: Double,
+    @ColumnInfo(name = "height_cm") val heightCm: Double,
+    @ColumnInfo(name = "weight_kg") val weightKg: Double
 )

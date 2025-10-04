@@ -10,11 +10,19 @@ import com.darleyleal.exitto.R
 
 // Set of Material typography styles to start with
 val Typography = Typography(
+    bodySmall = TextStyle(
+        fontFamily = FontFamily(Font(R.font.poppins)),
+        fontWeight = FontWeight.Bold,
+        fontSize = 14.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = FontFamily(Font(R.font.poppins)),
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp
+    ),
     bodyLarge = TextStyle(
         fontFamily = FontFamily(Font(R.font.poppins)),
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp
+    ),
 )

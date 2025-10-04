@@ -17,7 +17,6 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,7 +31,6 @@ import com.darleyleal.exitto.domain.entity.Sex
 import com.darleyleal.exitto.domain.entity.User
 import com.darleyleal.exitto.presentation.components.DateField
 import java.time.LocalDate
-import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,7 +60,7 @@ fun EditProfileForm(
             onValueChange = { input ->
                 name = input
             },
-            label = { Text("Neme") },
+            label = { Text("Name") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
@@ -135,12 +133,14 @@ fun EditProfileForm(
 
         // SUBMIT BUTTON
         Button(
-            modifier = Modifier.height(52.dp).fillMaxWidth(),
+            modifier = Modifier
+                .height(52.dp)
+                .fillMaxWidth(),
             onClick = {
                 if (name.isNotBlank() && height.isNotBlank() && weight.isNotBlank()) {
                     onSubmit(
                         User(
-                            id = user?.id ?: "", // Se estiver editando, preserva ID
+                            id = user?.id ?: 0,
                             name = name,
                             dateOfBirthday = dateOfBirth,
                             sex = selectedSex,

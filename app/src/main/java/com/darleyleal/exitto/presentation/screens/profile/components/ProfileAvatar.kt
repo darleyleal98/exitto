@@ -23,7 +23,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 
 @Composable
@@ -49,9 +51,10 @@ fun ProfileAvatar(modifier: Modifier = Modifier, isEditable: Boolean = false) {
                     .padding(8.dp)
                     .size(162.dp)
             ) {
-                Image(
-                    painter = painter,
+                AsyncImage(
+                    model = imageUri.value,
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
                         .clickable {
