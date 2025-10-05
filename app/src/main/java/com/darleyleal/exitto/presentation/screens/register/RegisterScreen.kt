@@ -1,6 +1,5 @@
 package com.darleyleal.exitto.presentation.screens.register
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -47,11 +46,13 @@ import androidx.compose.ui.unit.sp
 import com.darleyleal.exitto.presentation.core.theme.DarkLavander
 import com.darleyleal.exitto.presentation.core.theme.RichBlack
 import com.darleyleal.exitto.presentation.core.theme.Typography
+import com.darleyleal.exitto.presentation.provider.ViewModelProvider
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(modifier: Modifier = Modifier, onPopBackStack: () -> Unit) {
+fun RegisterScreen(modifier: Modifier = Modifier, onPopBackStack: () -> Unit, auth: FirebaseAuth, viewModelProvider: ViewModelProvider) {
     val systemUiController = rememberSystemUiController()
     val paddingValues = WindowInsets.statusBars.asPaddingValues()
 

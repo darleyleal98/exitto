@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.darleyleal.exitto.presentation.core.theme.RichBlack
+import com.darleyleal.exitto.presentation.provider.ViewModelProvider
 import com.darleyleal.exitto.presentation.screens.profile.components.EditProfileForm
 import com.darleyleal.exitto.presentation.screens.profile.components.ProfileAvatar
 import com.darleyleal.exitto.presentation.screens.profile.components.ProfileSectionCards
@@ -35,7 +36,7 @@ import com.darleyleal.exitto.presentation.screens.profile.components.ProfileSect
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier) {
+fun ProfileScreen(modifier: Modifier = Modifier, viewModelProvider: ViewModelProvider) {
     var showIsEditableBottomSheet by rememberSaveable { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     Scaffold(

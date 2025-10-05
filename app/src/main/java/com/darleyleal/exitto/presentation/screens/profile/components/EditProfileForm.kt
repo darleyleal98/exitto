@@ -101,7 +101,7 @@ fun EditProfileForm(
 
         DateField(
             label = "Date of Birth",
-            selectedDate = dateOfBirth,
+            selectedDate = dateOfBirth as LocalDate,
             onDateSelected = { newDate ->
                 dateOfBirth = newDate
             }
@@ -142,7 +142,7 @@ fun EditProfileForm(
                         User(
                             id = user?.id ?: 0,
                             name = name,
-                            dateOfBirthday = dateOfBirth,
+                            dateOfBirthday = dateOfBirth.toString(),
                             sex = selectedSex,
                             heightCm = height.toDoubleOrNull() ?: 0.0,
                             weightKg = weight.toDoubleOrNull() ?: 0.0

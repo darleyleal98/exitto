@@ -15,10 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.darleyleal.exitto.presentation.components.AppBar
 import com.darleyleal.exitto.presentation.core.theme.RichBlack
+import com.darleyleal.exitto.presentation.provider.ViewModelProvider
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(modifier: Modifier = Modifier, viewModelProvider: ViewModelProvider) {
     Scaffold(
         topBar = {
             AppBar()

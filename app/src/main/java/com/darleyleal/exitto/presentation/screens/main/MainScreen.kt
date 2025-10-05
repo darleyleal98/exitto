@@ -1,7 +1,6 @@
 package com.darleyleal.exitto.presentation.screens.main
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -14,10 +13,10 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.darleyleal.exitto.presentation.navigation.bottomNavigationList
+import com.darleyleal.exitto.presentation.provider.ViewModelProvider
 import com.darleyleal.exitto.presentation.screens.analytics.AnalyticsScreen
 import com.darleyleal.exitto.presentation.screens.gym.GymScreen
 import com.darleyleal.exitto.presentation.screens.health.HealthScreen
@@ -27,16 +26,16 @@ import com.darleyleal.exitto.presentation.screens.profile.ProfileScreen
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, navController: NavHostController) {
+fun MainScreen(modifier: Modifier = Modifier, navController: NavHostController, viewModelProvider: ViewModelProvider) {
     var selected by rememberSaveable { mutableIntStateOf(0) }
     Scaffold(
         content = {
             when (selected) {
-                0 -> HomeScreen(modifier)
-                1 -> HealthScreen(modifier)
-                2 -> AnalyticsScreen(modifier)
-                3 -> GymScreen(modifier)
-                4 -> ProfileScreen(modifier)
+                0 -> HomeScreen(modifier, viewModelProvider = viewModelProvider)
+                1 -> HealthScreen(modifier, viewModelProvider = viewModelProvider)
+                2 -> AnalyticsScreen(modifier, viewModelProvider = viewModelProvider)
+                3 -> GymScreen(modifier, viewModelProvider = viewModelProvider)
+                4 -> ProfileScreen(modifier, viewModelProvider = viewModelProvider)
             }
         },
         bottomBar = {

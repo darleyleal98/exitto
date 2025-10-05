@@ -57,11 +57,13 @@ import androidx.compose.ui.unit.sp
 import com.darleyleal.exitto.R
 import com.darleyleal.exitto.presentation.core.theme.DarkLavander
 import com.darleyleal.exitto.presentation.core.theme.Typography
+import com.darleyleal.exitto.presentation.provider.ViewModelProvider
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.firebase.auth.FirebaseAuth
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier, onNavigateToRegisterScreen: () -> Unit) {
+fun LoginScreen(modifier: Modifier = Modifier, onNavigateToRegisterScreen: () -> Unit, auth: FirebaseAuth, viewModelProvider: ViewModelProvider) {
     val systemUiController = rememberSystemUiController()
     val paddingValues = WindowInsets.statusBars.asPaddingValues()
 
