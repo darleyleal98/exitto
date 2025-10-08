@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import com.darleyleal.exitto.presentation.core.theme.DarkLavander
 import com.darleyleal.exitto.presentation.core.theme.RichBlack
 import com.darleyleal.exitto.presentation.core.theme.Typography
+import com.darleyleal.exitto.presentation.provider.ViewModelKey
 import com.darleyleal.exitto.presentation.provider.ViewModelProvider
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.auth.FirebaseAuth
@@ -62,6 +63,12 @@ fun RegisterScreen(modifier: Modifier = Modifier, onPopBackStack: () -> Unit, au
 
     var showPassword by rememberSaveable { mutableStateOf(false) }
     var showConfirmPassword by rememberSaveable { mutableStateOf(false) }
+
+    val registerViewModel = viewModelProvider.getViewModel(ViewModelKey.REGISTER)
+
+    LaunchedEffect(Unit) {
+        
+    }
 
     LaunchedEffect(Unit) {
         systemUiController.setSystemBarsColor(

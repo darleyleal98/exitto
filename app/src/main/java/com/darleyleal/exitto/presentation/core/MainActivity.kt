@@ -9,10 +9,12 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.darleyleal.exitto.presentation.core.theme.ExittoTheme
 import com.darleyleal.exitto.presentation.navigation.AppNavigation
+import com.darleyleal.exitto.presentation.navigation.Routes
 import com.darleyleal.exitto.presentation.provider.ViewModelProvider
 import com.darleyleal.exitto.presentation.screens.analytics.AnalyticsViewModel
 import com.darleyleal.exitto.presentation.screens.gym.GymViewModel
@@ -25,7 +27,9 @@ import com.darleyleal.exitto.presentation.screens.register.RegisterViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
@@ -60,6 +64,17 @@ class MainActivity : ComponentActivity() {
             ExittoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val navController = rememberNavController()
+
+                    LaunchedEffect(Unit) {
+                        if (auth.currentUser != null) {
+                            navController.navigate(Routes.Login.name) {
+                                popUpTo(Routes.Login.name) {
+                                    inclusive = true
+                                }
+                            }
+                        }
+                    }
+
                     AppNavigation(
                         modifier = Modifier.padding(innerPadding),
                         navController = navController,
@@ -68,14 +83,6 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val currentUser = auth.currentUser
-        if (currentUser == null) {
-            Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show()
         }
     }
 }
