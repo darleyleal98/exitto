@@ -38,7 +38,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -59,28 +63,66 @@ import androidx.compose.ui.unit.sp
 import com.darleyleal.exitto.R
 import com.darleyleal.exitto.presentation.core.theme.DarkLavander
 import com.darleyleal.exitto.presentation.core.theme.Typography
+import com.darleyleal.exitto.presentation.provider.ViewModelKey
 import com.darleyleal.exitto.presentation.provider.ViewModelProvider
+import com.darleyleal.exitto.presentation.utils.GoogleSignInHelper
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.auth.FirebaseAuth
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier, onNavigateToRegisterScreen: () -> Unit, auth: FirebaseAuth, viewModelProvider: ViewModelProvider) {
+fun LoginScreen(
+    modifier: Modifier = Modifier, 
+    onNavigateToRegisterScreen: () -> Unit, 
+    auth: FirebaseAuth, 
+    viewModelProvider: ViewModelProvider,
+    onNavigateToMainScreen: () -> Unit
+) {
     val systemUiController = rememberSystemUiController()
     val paddingValues = WindowInsets.statusBars.asPaddingValues()
 
     val context = LocalContext.current
+    val loginViewModel = viewModelProvider.getViewModel(ViewModelKey.LOGIN) as com.darleyleal.exitto.presentation.screens.login.LoginViewModel
+
+    val isSuccessful by loginViewModel.isSuccessful.collectAsState()
+    val isFailure by loginViewModel.isFailure.collectAsState()
+    val errorMessage by loginViewModel.errorMessage.collectAsState()
 
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
     var showPassword by rememberSaveable { mutableStateOf(false) }
 
+    // Google Sign-In setup
+    val googleSignInHelper = com.darleyleal.exitto.presentation.utils.GoogleSignInHelper(context)
+    val googleSignInLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        val idToken = googleSignInHelper.getSignInResult(result.data)
+        if (idToken != null) {
+            loginViewModel.signInWithGoogle(idToken)
+        } else {
+            Toast.makeText(context, "Google Sign-In failed", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     LaunchedEffect(Unit) {
         systemUiController.setSystemBarsColor(
             color = Color.Transparent,
             darkIcons = false
         )
+    }
+
+    LaunchedEffect(isSuccessful, isFailure, errorMessage) {
+        when {
+            isSuccessful -> {
+                Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+                onNavigateToMainScreen()
+            }
+            isFailure -> {
+                Toast.makeText(context, errorMessage ?: "Login failed. Please try again.", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     Scaffold(
@@ -239,7 +281,11 @@ fun LoginScreen(modifier: Modifier = Modifier, onNavigateToRegisterScreen: () ->
                                         containerColor = DarkLavander
                                     ),
                                     onClick = {
-
+                                        if (email.isNotBlank() && password.isNotBlank()) {
+                                            loginViewModel.signInWithEmailAndPassword(email, password)
+                                        } else {
+                                            Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                                        }
                                     }
                                 ) {
                                     Text(
@@ -261,7 +307,7 @@ fun LoginScreen(modifier: Modifier = Modifier, onNavigateToRegisterScreen: () ->
                                             .fillMaxWidth()
                                             .align(Alignment.Center),
                                         onClick = {
-                                            Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+                                            googleSignInHelper.signIn(googleSignInLauncher)
                                         }
                                     ) {
                                         Image(

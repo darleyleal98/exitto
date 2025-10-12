@@ -1,6 +1,7 @@
 package com.darleyleal.exitto.presentation.provider
 
 enum class ViewModelKey {
+    AUTH,
     ANALYTICS,
     HEALTH,
     REGISTER,

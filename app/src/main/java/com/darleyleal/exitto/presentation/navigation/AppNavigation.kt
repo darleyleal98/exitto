@@ -22,16 +22,23 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun AppNavigation(
-    modifier: Modifier = Modifier, navController: NavHostController,
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    startDestination: String,
     auth: FirebaseAuth, viewModelProvider: ViewModelProvider
 ) {
-    NavHost(startDestination = Routes.Login.name, navController = navController) {
+    NavHost(startDestination = startDestination, navController = navController) {
         composable(route = Routes.Login.name) {
             LoginScreen(
                 modifier, auth = auth,
                 viewModelProvider = viewModelProvider,
                 onNavigateToRegisterScreen = {
                     navController.navigate(Routes.Register.name)
+                },
+                onNavigateToMainScreen = {
+                    navController.navigate(Routes.Main.name) {
+                        popUpTo(Routes.Login.name) { inclusive = true }
+                    }
                 }
             )
         }

@@ -2,6 +2,7 @@ package com.darleyleal.exitto.presentation.provider
 
 import androidx.lifecycle.ViewModel
 import com.darleyleal.exitto.presentation.screens.analytics.AnalyticsViewModel
+import com.darleyleal.exitto.presentation.screens.auth.AuthViewModel
 import com.darleyleal.exitto.presentation.screens.gym.GymViewModel
 import com.darleyleal.exitto.presentation.screens.health.HealthViewModel
 import com.darleyleal.exitto.presentation.screens.home.HomeViewModel
@@ -12,6 +13,7 @@ import com.darleyleal.exitto.presentation.screens.register.RegisterViewModel
 import javax.inject.Inject
 
 class ViewModelProvider @Inject constructor(
+    authViewModel: AuthViewModel,
     analyticsViewModel: AnalyticsViewModel,
     healthViewModel: HealthViewModel,
     registerViewModel: RegisterViewModel,
@@ -23,6 +25,7 @@ class ViewModelProvider @Inject constructor(
 ) : ViewModel() {
 
     private val viewModels: Map<ViewModelKey, ViewModel> = mapOf(
+        ViewModelKey.AUTH to authViewModel,
         ViewModelKey.ANALYTICS to analyticsViewModel,
         ViewModelKey.HEALTH to healthViewModel,
         ViewModelKey.REGISTER to registerViewModel,

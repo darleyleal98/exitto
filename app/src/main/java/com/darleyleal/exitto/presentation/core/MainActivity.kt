@@ -10,13 +10,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.darleyleal.exitto.presentation.core.theme.ExittoTheme
 import com.darleyleal.exitto.presentation.navigation.AppNavigation
 import com.darleyleal.exitto.presentation.navigation.Routes
+import com.darleyleal.exitto.presentation.provider.ViewModelKey
 import com.darleyleal.exitto.presentation.provider.ViewModelProvider
 import com.darleyleal.exitto.presentation.screens.analytics.AnalyticsViewModel
+import com.darleyleal.exitto.presentation.screens.auth.AuthViewModel
 import com.darleyleal.exitto.presentation.screens.gym.GymViewModel
 import com.darleyleal.exitto.presentation.screens.health.HealthViewModel
 import com.darleyleal.exitto.presentation.screens.home.HomeViewModel
@@ -40,6 +44,7 @@ class MainActivity : ComponentActivity() {
 
         auth = Firebase.auth
 
+        val authViewModel: AuthViewModel by viewModels()
         val analyticsViewModel: AnalyticsViewModel by viewModels()
         val healthViewModel: HealthViewModel by viewModels()
         val loginViewModel: LoginViewModel by viewModels()
@@ -50,6 +55,7 @@ class MainActivity : ComponentActivity() {
         val registerViewModel: RegisterViewModel by viewModels()
 
         val viewModelProvider = ViewModelProvider(
+            authViewModel = authViewModel,
             analyticsViewModel = analyticsViewModel,
             healthViewModel = healthViewModel,
             loginViewModel = loginViewModel,
@@ -64,21 +70,16 @@ class MainActivity : ComponentActivity() {
             ExittoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val navController = rememberNavController()
+                    val authViewModel = viewModelProvider.getViewModel(ViewModelKey.AUTH) as AuthViewModel
 
-                    LaunchedEffect(Unit) {
-                        if (auth.currentUser != null) {
-                            navController.navigate(Routes.Login.name) {
-                                popUpTo(Routes.Login.name) {
-                                    inclusive = true
-                                }
-                            }
-                        }
-                    }
+                    val isAuthenticated by authViewModel.isAuthenticated.collectAsState()
+                    val isLoading by authViewModel.isLoading.collectAsState()
 
                     AppNavigation(
                         modifier = Modifier.padding(innerPadding),
                         navController = navController,
                         auth = auth,
+                        startDestination = if (isAuthenticated) Routes.Main.name else Routes.Login.name,
                         viewModelProvider = viewModelProvider
                     )
                 }

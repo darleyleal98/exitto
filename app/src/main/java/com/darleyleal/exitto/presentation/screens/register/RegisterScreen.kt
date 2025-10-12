@@ -47,6 +47,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.darleyleal.exitto.domain.entity.RegisterResult
 import com.darleyleal.exitto.presentation.core.theme.DarkLavander
 import com.darleyleal.exitto.presentation.core.theme.RichBlack
 import com.darleyleal.exitto.presentation.core.theme.Typography
@@ -68,35 +69,32 @@ fun RegisterScreen(
     val registerViewModel = viewModelProvider.getViewModel(ViewModelKey.REGISTER) as RegisterViewModel
 
     val context = LocalContext.current
-    val isSuccess by registerViewModel.isSuccess.collectAsState()
-    val isFailure by registerViewModel.isFailure.collectAsState()
-    val errorMessage by registerViewModel.errorMessage.collectAsState()
+    val uiState by registerViewModel.uiState.collectAsState()
 
-    val email by registerViewModel.email.collectAsState()
-    var isEmailInvalid by remember { mutableStateOf(false) }
-    var isEmailFormatInvalid by remember { mutableStateOf(false) }
-
-    val password by registerViewModel.password.collectAsState()
-    var isPasswordInvalid by remember { mutableStateOf(false) }
-    var isPasswordTooShort by remember { mutableStateOf(false) }
-
-    val confirmPassword by registerViewModel.confirmPassword.collectAsState()
-    var isConfirmPasswordInvalid by remember { mutableStateOf(false) }
-    var isPasswordMismatch by remember { mutableStateOf(false) }
+    val email = uiState.form.email
+    val password = uiState.form.password
+    val confirmPassword = uiState.form.confirmPassword
+    val validationErrors = uiState.validationErrors
+    val isLoading = registerViewModel.isLoading()
+    val canSubmit = registerViewModel.canSubmit()
 
     var showPassword by rememberSaveable { mutableStateOf(false) }
     var showConfirmPassword by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(isSuccess, isFailure, errorMessage) {
-        when {
-            isSuccess -> {
+    LaunchedEffect(uiState.result) {
+        when (uiState.result) {
+            is RegisterResult.Success -> {
                 Toast.makeText(context, "User registered successfully!", Toast.LENGTH_SHORT).show()
-                onNavigateToMainScreen()
+                //onNavigateToMainScreen()
             }
 
-            isFailure -> {
-                Toast.makeText(context, errorMessage ?: "Registration failed. Please try again.", Toast.LENGTH_LONG).show()
+            is RegisterResult.Error -> {
+                (uiState.result as RegisterResult.Error).message.let { message ->
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                }
             }
+
+            is RegisterResult.Loading -> {}
         }
     }
 
@@ -152,14 +150,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = email,
                     onValueChange = { input ->
-                        registerViewModel.updateEmail(email = input)
-                        if (input.isNotEmpty()) {
-                            isEmailInvalid = input.trim().isEmpty()
-                            isEmailFormatInvalid = registerViewModel.validateIfEmailIsInvalid(text = input)
-                        } else {
-                            isEmailInvalid = false
-                            isEmailFormatInvalid = false
-                        }
+                        registerViewModel.updateEmail(input)
                     },
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
@@ -183,7 +174,7 @@ fun RegisterScreen(
                             fontWeight = FontWeight.Bold
                         )
                     },
-                    isError = isEmailInvalid,
+                    isError = validationErrors.emailError != null,
                     shape = RoundedCornerShape(100.dp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                     singleLine = true,
@@ -192,18 +183,9 @@ fun RegisterScreen(
                         .height(72.dp)
                 )
 
-                if (isEmailInvalid) {
+                validationErrors.emailError?.let { error ->
                     Text(
-                        text = "Email is required",
-                        color = Color.Red,
-                        style = Typography.bodySmall,
-                        modifier = Modifier.padding(top = 8.dp, start = 8.dp)
-                    )
-                }
-
-                if (isEmailFormatInvalid && !isEmailInvalid) {
-                    Text(
-                        text = "Email doesn't match",
+                        text = error,
                         color = Color.Red,
                         style = Typography.bodySmall,
                         modifier = Modifier.padding(top = 8.dp, start = 8.dp)
@@ -215,14 +197,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = password,
                     onValueChange = { input ->
-                        registerViewModel.updatePassword(password = input)
-                        if (input.isNotEmpty()) {
-                            isPasswordInvalid = input.trim().isEmpty()
-                            isPasswordTooShort = input.length < 6
-                        } else {
-                            isPasswordInvalid = false
-                            isPasswordTooShort = false
-                        }
+                        registerViewModel.updatePassword(input)
                     },
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
@@ -253,7 +228,7 @@ fun RegisterScreen(
                             )
                         }
                     },
-                    isError = isPasswordInvalid,
+                    isError = validationErrors.passwordError != null,
                     label = {
                         Text(
                             text = "Password",
@@ -270,18 +245,9 @@ fun RegisterScreen(
                         .height(72.dp)
                 )
 
-                if (isPasswordInvalid) {
+                validationErrors.passwordError?.let { error ->
                     Text(
-                        text = "Password is required",
-                        color = Color.Red,
-                        style = Typography.bodySmall,
-                        modifier = Modifier.padding(top = 8.dp, start = 8.dp)
-                    )
-                }
-
-                if (isPasswordTooShort && !isPasswordInvalid) {
-                    Text(
-                        text = "Password must be at least 6 characters",
+                        text = error,
                         color = Color.Red,
                         style = Typography.bodySmall,
                         modifier = Modifier.padding(top = 8.dp, start = 8.dp)
@@ -293,14 +259,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = confirmPassword,
                     onValueChange = { input ->
-                        registerViewModel.updateConfirmPassword(confirmPassword = input)
-                        if (input.isNotEmpty()) {
-                            isConfirmPasswordInvalid = input.trim().isEmpty()
-                            isPasswordMismatch = input != password
-                        } else {
-                            isConfirmPasswordInvalid = false
-                            isPasswordMismatch = false
-                        }
+                        registerViewModel.updateConfirmPassword(input)
                     },
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
@@ -331,7 +290,7 @@ fun RegisterScreen(
                             )
                         }
                     },
-                    isError = isConfirmPasswordInvalid,
+                    isError = validationErrors.confirmPasswordError != null,
                     label = {
                         Text(
                             text = "Confirm Password",
@@ -348,18 +307,9 @@ fun RegisterScreen(
                         .height(72.dp)
                 )
 
-                if (isConfirmPasswordInvalid) {
+                validationErrors.confirmPasswordError?.let { error ->
                     Text(
-                        text = "Confirm Password is required",
-                        color = Color.Red,
-                        style = Typography.bodySmall,
-                        modifier = Modifier.padding(top = 8.dp, start = 8.dp)
-                    )
-                }
-
-                if (isPasswordMismatch && !isConfirmPasswordInvalid) {
-                    Text(
-                        text = "Passwords do not match",
+                        text = error,
                         color = Color.Red,
                         style = Typography.bodySmall,
                         modifier = Modifier.padding(top = 8.dp, start = 8.dp)
@@ -376,22 +326,11 @@ fun RegisterScreen(
                         containerColor = DarkLavander
                     ),
                     onClick = {
-                        if (registerViewModel.validateAllFields()) {
-                            registerViewModel.createUserWithEmailAndPasswordInFirebase(email = email, password = password)
-                        } else {
-                            isEmailInvalid = email.trim().isEmpty()
-                            isEmailFormatInvalid = registerViewModel.validateIfEmailIsInvalid(email)
-                            isPasswordInvalid = password.trim().isEmpty()
-                            isPasswordTooShort = password.length < 6
-                            isConfirmPasswordInvalid = confirmPassword.trim().isEmpty()
-                            isPasswordMismatch = confirmPassword != password
-
-                            Toast.makeText(context, "Please fill all fields correctly", Toast.LENGTH_SHORT).show()
-                        }
+                        registerViewModel.registerUser()
                     }
                 ) {
                     Text(
-                        text = "Sign Up",
+                        text = if (isLoading) "Creating Account..." else "Sign Up",
                         style = Typography.bodyLarge,
                         color = Color.White,
                         fontSize = 26.sp

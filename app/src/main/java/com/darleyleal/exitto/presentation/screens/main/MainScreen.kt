@@ -8,6 +8,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -22,12 +23,23 @@ import com.darleyleal.exitto.presentation.screens.gym.GymScreen
 import com.darleyleal.exitto.presentation.screens.health.HealthScreen
 import com.darleyleal.exitto.presentation.screens.home.HomeScreen
 import com.darleyleal.exitto.presentation.screens.profile.ProfileScreen
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen(modifier: Modifier = Modifier, navController: NavHostController, viewModelProvider: ViewModelProvider) {
     var selected by rememberSaveable { mutableIntStateOf(0) }
+
+    val systemUiController = rememberSystemUiController()
+
+    LaunchedEffect(Unit) {
+        systemUiController.setSystemBarsColor(
+            color = Color.Black,
+            darkIcons = false
+        )
+    }
+
     Scaffold(
         content = {
             when (selected) {
