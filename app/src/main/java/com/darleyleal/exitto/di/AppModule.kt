@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.darleyleal.exitto.data.dao.UserDao
 import com.darleyleal.exitto.data.database.AppDatabase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -31,4 +32,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 }

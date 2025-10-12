@@ -51,10 +51,13 @@ fun AppNavigation(
             }
         ) {
             RegisterScreen(
-                modifier, auth = auth,
+                modifier,
                 viewModelProvider = viewModelProvider,
                 onPopBackStack = {
                     navController.popBackStack()
+                },
+                onNavigateToMainScreen = {
+                    navController.navigate(Routes.Main.name)
                 }
             )
         }
