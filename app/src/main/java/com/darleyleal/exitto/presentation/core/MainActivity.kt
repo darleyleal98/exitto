@@ -69,17 +69,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             ExittoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val navController = rememberNavController()
-                    val authViewModel = viewModelProvider.getViewModel(ViewModelKey.AUTH) as AuthViewModel
-
-                    val isAuthenticated by authViewModel.isAuthenticated.collectAsState()
-                    val isLoading by authViewModel.isLoading.collectAsState()
-
                     AppNavigation(
                         modifier = Modifier.padding(innerPadding),
-                        navController = navController,
                         auth = auth,
-                        startDestination = if (isAuthenticated) Routes.Main.name else Routes.Login.name,
                         viewModelProvider = viewModelProvider
                     )
                 }

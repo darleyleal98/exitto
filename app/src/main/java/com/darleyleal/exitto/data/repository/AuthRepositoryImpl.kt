@@ -38,6 +38,7 @@ class AuthRepositoryImpl @Inject constructor(
             } else {
                 emit(RegisterResult.Error("Failed to create user account"))
             }
+
         } catch (e: FirebaseAuthUserCollisionException) {
             emit(RegisterResult.Error("This email is already registered. Please use a different email."))
         } catch (e: FirebaseAuthWeakPasswordException) {

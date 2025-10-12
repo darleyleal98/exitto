@@ -82,19 +82,21 @@ fun RegisterScreen(
     var showConfirmPassword by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(uiState.result) {
-        when (uiState.result) {
-            is RegisterResult.Success -> {
-                Toast.makeText(context, "User registered successfully!", Toast.LENGTH_SHORT).show()
-                //onNavigateToMainScreen()
-            }
-
-            is RegisterResult.Error -> {
-                (uiState.result as RegisterResult.Error).message.let { message ->
-                    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        uiState.result?.let {
+            when (it) {
+                is RegisterResult.Success -> {
+                    Toast.makeText(context, "User registered successfully!", Toast.LENGTH_SHORT).show()
+                    onNavigateToMainScreen()
                 }
-            }
 
-            is RegisterResult.Loading -> {}
+                is RegisterResult.Error -> {
+                    (uiState.result as RegisterResult.Error).message.let { message ->
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                is RegisterResult.Loading -> {}
+            }
         }
     }
 

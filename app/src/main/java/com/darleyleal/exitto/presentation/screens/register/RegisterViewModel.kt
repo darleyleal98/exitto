@@ -111,33 +111,10 @@ class RegisterViewModel @Inject constructor(
     }
 
     /**
-     * Checks if the current form is valid for submission.
-     * This is a convenience method for the UI layer.
-     */
-    fun isFormValid(): Boolean = _uiState.value.isFormValid
-
-    /**
      * Checks if the registration can be submitted.
      * Prevents multiple submissions while registration is in progress.
      */
     fun canSubmit(): Boolean = _uiState.value.canSubmit
-
-    /**
-     * Gets the current error message if registration failed.
-     * Returns null if there's no error or if registration is successful.
-     */
-    fun getErrorMessage(): String? {
-        val result = _uiState.value.result
-        return if (result is RegisterResult.Error) result.message else null
-    }
-
-    /**
-     * Checks if registration was successful.
-     * Convenience method for the UI layer.
-     */
-    fun isRegistrationSuccessful(): Boolean {
-        return _uiState.value.result is RegisterResult.Success
-    }
 
     /**
      * Checks if registration is currently in progress.

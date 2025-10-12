@@ -7,7 +7,7 @@ package com.darleyleal.exitto.domain.entity
  */
 data class RegisterUiState(
     val form: RegisterForm = RegisterForm(),
-    val result: RegisterResult = RegisterResult.Success,
+    val result: RegisterResult? = null,
     val validationErrors: ValidationErrors = ValidationErrors()
 ) {
     val isFormValid: Boolean

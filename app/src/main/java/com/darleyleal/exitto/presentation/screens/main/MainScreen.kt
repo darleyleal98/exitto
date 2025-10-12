@@ -35,7 +35,7 @@ fun MainScreen(modifier: Modifier = Modifier, navController: NavHostController, 
 
     LaunchedEffect(Unit) {
         systemUiController.setSystemBarsColor(
-            color = Color.Black,
+            color = Color.Transparent,
             darkIcons = false
         )
     }
