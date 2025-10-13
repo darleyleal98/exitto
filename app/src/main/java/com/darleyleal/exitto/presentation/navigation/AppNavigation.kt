@@ -22,7 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.darleyleal.exitto.presentation.provider.ViewModelKey
 import com.darleyleal.exitto.presentation.provider.ViewModelProvider
 import com.darleyleal.exitto.presentation.screens.analytics.AnalyticsScreen
-import com.darleyleal.exitto.presentation.screens.auth.AuthViewModel
+import com.darleyleal.exitto.presentation.screens.register.AuthViewModel
 import com.darleyleal.exitto.presentation.screens.gym.GymScreen
 import com.darleyleal.exitto.presentation.screens.health.HealthScreen
 import com.darleyleal.exitto.presentation.screens.home.HomeScreen
@@ -52,7 +52,6 @@ fun AppNavigation(
             NavHost(startDestination = if (isAuthenticated) Routes.Main.name else Routes.Login.name, navController = navController) {
                 composable(route = Routes.Login.name) {
                     LoginScreen(
-                        modifier, auth = auth,
                         viewModelProvider = viewModelProvider,
                         onNavigateToRegisterScreen = {
                             navController.navigate(Routes.Register.name)

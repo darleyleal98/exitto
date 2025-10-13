@@ -1,4 +1,4 @@
-package com.darleyleal.exitto.presentation.screens.auth
+package com.darleyleal.exitto.presentation.screens.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -52,4 +52,3 @@ class AuthViewModel @Inject constructor(
         checkAuthStatus()
     }
 }
-

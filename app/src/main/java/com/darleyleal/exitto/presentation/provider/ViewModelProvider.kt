@@ -2,7 +2,7 @@ package com.darleyleal.exitto.presentation.provider
 
 import androidx.lifecycle.ViewModel
 import com.darleyleal.exitto.presentation.screens.analytics.AnalyticsViewModel
-import com.darleyleal.exitto.presentation.screens.auth.AuthViewModel
+import com.darleyleal.exitto.presentation.screens.register.AuthViewModel
 import com.darleyleal.exitto.presentation.screens.gym.GymViewModel
 import com.darleyleal.exitto.presentation.screens.health.HealthViewModel
 import com.darleyleal.exitto.presentation.screens.home.HomeViewModel

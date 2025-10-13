@@ -13,7 +13,7 @@ data class RegisterUiState(
     val isFormValid: Boolean
         get() = validationErrors.isEmpty && form.email.isNotBlank() &&
                 form.password.isNotBlank() && form.confirmPassword.isNotBlank()
-    
+
     val canSubmit: Boolean
         get() = isFormValid && result !is RegisterResult.Loading
 }

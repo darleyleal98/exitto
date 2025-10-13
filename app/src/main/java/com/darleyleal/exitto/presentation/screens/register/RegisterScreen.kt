@@ -27,6 +27,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
@@ -36,6 +38,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -54,6 +57,7 @@ import com.darleyleal.exitto.presentation.core.theme.Typography
 import com.darleyleal.exitto.presentation.provider.ViewModelKey
 import com.darleyleal.exitto.presentation.provider.ViewModelProvider
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,7 +72,6 @@ fun RegisterScreen(
 
     val registerViewModel = viewModelProvider.getViewModel(ViewModelKey.REGISTER) as RegisterViewModel
 
-    val context = LocalContext.current
     val uiState by registerViewModel.uiState.collectAsState()
 
     val email = uiState.form.email
@@ -81,17 +84,24 @@ fun RegisterScreen(
     var showPassword by rememberSaveable { mutableStateOf(false) }
     var showConfirmPassword by rememberSaveable { mutableStateOf(false) }
 
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
     LaunchedEffect(uiState.result) {
         uiState.result?.let {
             when (it) {
                 is RegisterResult.Success -> {
-                    Toast.makeText(context, "User registered successfully!", Toast.LENGTH_SHORT).show()
-                    onNavigateToMainScreen()
+                    scope.launch {
+                        snackbarHostState.showSnackbar("User registered successfully!")
+                        onNavigateToMainScreen()
+                    }
                 }
 
                 is RegisterResult.Error -> {
                     (uiState.result as RegisterResult.Error).message.let { message ->
-                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                        scope.launch {
+                            snackbarHostState.showSnackbar(message)
+                        }
                     }
                 }
 
@@ -138,6 +148,9 @@ fun RegisterScreen(
                     }
                 }
             )
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
         },
         content = {
             Column(
@@ -327,6 +340,8 @@ fun RegisterScreen(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = DarkLavander
                     ),
+                    enabled = canSubmit,
+                    shape = RoundedCornerShape(100.dp),
                     onClick = {
                         registerViewModel.registerUser()
                     }

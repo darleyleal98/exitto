@@ -20,7 +20,7 @@ import com.darleyleal.exitto.presentation.navigation.Routes
 import com.darleyleal.exitto.presentation.provider.ViewModelKey
 import com.darleyleal.exitto.presentation.provider.ViewModelProvider
 import com.darleyleal.exitto.presentation.screens.analytics.AnalyticsViewModel
-import com.darleyleal.exitto.presentation.screens.auth.AuthViewModel
+import com.darleyleal.exitto.presentation.screens.register.AuthViewModel
 import com.darleyleal.exitto.presentation.screens.gym.GymViewModel
 import com.darleyleal.exitto.presentation.screens.health.HealthViewModel
 import com.darleyleal.exitto.presentation.screens.home.HomeViewModel

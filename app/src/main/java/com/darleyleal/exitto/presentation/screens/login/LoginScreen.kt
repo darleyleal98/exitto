@@ -41,10 +41,14 @@ import androidx.compose.runtime.Composable
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -68,13 +72,12 @@ import com.darleyleal.exitto.presentation.provider.ViewModelProvider
 import com.darleyleal.exitto.presentation.utils.GoogleSignInHelper
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LoginScreen(
-    modifier: Modifier = Modifier, 
-    onNavigateToRegisterScreen: () -> Unit, 
-    auth: FirebaseAuth, 
+    onNavigateToRegisterScreen: () -> Unit,
     viewModelProvider: ViewModelProvider,
     onNavigateToMainScreen: () -> Unit
 ) {
@@ -82,7 +85,7 @@ fun LoginScreen(
     val paddingValues = WindowInsets.statusBars.asPaddingValues()
 
     val context = LocalContext.current
-    val loginViewModel = viewModelProvider.getViewModel(ViewModelKey.LOGIN) as com.darleyleal.exitto.presentation.screens.login.LoginViewModel
+    val loginViewModel = viewModelProvider.getViewModel(ViewModelKey.LOGIN) as LoginViewModel
 
     val isSuccessful by loginViewModel.isSuccessful.collectAsState()
     val isFailure by loginViewModel.isFailure.collectAsState()
@@ -93,8 +96,11 @@ fun LoginScreen(
 
     var showPassword by rememberSaveable { mutableStateOf(false) }
 
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
     // Google Sign-In setup
-    val googleSignInHelper = com.darleyleal.exitto.presentation.utils.GoogleSignInHelper(context)
+    val googleSignInHelper = GoogleSignInHelper(context)
     val googleSignInLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
@@ -102,7 +108,9 @@ fun LoginScreen(
         if (idToken != null) {
             loginViewModel.signInWithGoogle(idToken)
         } else {
-            Toast.makeText(context, "Google Sign-In failed", Toast.LENGTH_SHORT).show()
+            scope.launch {
+                snackbarHostState.showSnackbar(message = "Google Sign-In failed")
+            }
         }
     }
 
@@ -116,11 +124,15 @@ fun LoginScreen(
     LaunchedEffect(isSuccessful, isFailure, errorMessage) {
         when {
             isSuccessful -> {
-                Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
-                onNavigateToMainScreen()
+                scope.launch {
+                    snackbarHostState.showSnackbar("Login successful!")
+                    onNavigateToMainScreen()
+                }
             }
             isFailure -> {
-                Toast.makeText(context, errorMessage ?: "Login failed. Please try again.", Toast.LENGTH_LONG).show()
+                scope.launch {
+                    snackbarHostState.showSnackbar(errorMessage ?: "Login failed. Please try again.")
+                }
             }
         }
     }
@@ -133,6 +145,9 @@ fun LoginScreen(
                 fontSize = 68.sp,
                 color = Color.DarkGray.copy(alpha = 0.6f)
             )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         },
         content = {
             Box(
