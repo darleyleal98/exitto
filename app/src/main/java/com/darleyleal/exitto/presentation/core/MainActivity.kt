@@ -1,7 +1,6 @@
 package com.darleyleal.exitto.presentation.core
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -9,7 +8,6 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -20,7 +18,7 @@ import com.darleyleal.exitto.presentation.navigation.Routes
 import com.darleyleal.exitto.presentation.provider.ViewModelKey
 import com.darleyleal.exitto.presentation.provider.ViewModelProvider
 import com.darleyleal.exitto.presentation.screens.analytics.AnalyticsViewModel
-import com.darleyleal.exitto.presentation.screens.register.AuthViewModel
+import com.darleyleal.exitto.presentation.screens.auth.AuthViewModel
 import com.darleyleal.exitto.presentation.screens.gym.GymViewModel
 import com.darleyleal.exitto.presentation.screens.health.HealthViewModel
 import com.darleyleal.exitto.presentation.screens.home.HomeViewModel
@@ -28,6 +26,7 @@ import com.darleyleal.exitto.presentation.screens.login.LoginViewModel
 import com.darleyleal.exitto.presentation.screens.main.MainViewModel
 import com.darleyleal.exitto.presentation.screens.profile.ProfileViewModel
 import com.darleyleal.exitto.presentation.screens.register.RegisterViewModel
+import com.darleyleal.exitto.presentation.screens.splash.SplashScreen
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -69,11 +68,26 @@ class MainActivity : ComponentActivity() {
         setContent {
             ExittoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    AppNavigation(
-                        modifier = Modifier.padding(innerPadding),
-                        auth = auth,
-                        viewModelProvider = viewModelProvider
-                    )
+                    val navController = rememberNavController()
+                    val authViewModel = viewModelProvider.getViewModel(ViewModelKey.AUTH) as AuthViewModel
+
+                    val isAuthenticated by authViewModel.isAuthenticated.collectAsState()
+                    val isLoading by authViewModel.isLoading.collectAsState()
+
+                    val route = if (isAuthenticated) Routes.Main.name else Routes.Login.name
+
+                    when {
+                        isLoading -> SplashScreen()
+
+                        else -> {
+                            AppNavigation(
+                                modifier = Modifier.padding(innerPadding),
+                                navController = navController,
+                                startDestination = route,
+                                viewModelProvider = viewModelProvider
+                            )
+                        }
+                    }
                 }
             }
         }

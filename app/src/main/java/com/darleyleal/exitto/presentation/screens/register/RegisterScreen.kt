@@ -340,10 +340,19 @@ fun RegisterScreen(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = DarkLavander
                     ),
-                    enabled = canSubmit,
                     shape = RoundedCornerShape(100.dp),
                     onClick = {
-                        registerViewModel.registerUser()
+                        when {
+                            canSubmit -> {
+                                registerViewModel.registerUser()
+                            }
+
+                            else -> {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("Please fill in all fields.")
+                                }
+                            }
+                        }
                     }
                 ) {
                     Text(

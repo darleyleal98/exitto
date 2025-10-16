@@ -1,4 +1,4 @@
-package com.darleyleal.exitto.presentation.screens.register
+package com.darleyleal.exitto.presentation.screens.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,14 +41,5 @@ class AuthViewModel @Inject constructor(
                 _isLoading.value = false
             }
         }
-    }
-
-    /**
-     * Refreshes the authentication status.
-     * Can be called when needed to re-check authentication state.
-     */
-    fun refreshAuthStatus() {
-        _isLoading.value = true
-        checkAuthStatus()
     }
 }
