@@ -1,5 +1,6 @@
 package com.darleyleal.exitto.data.repository
 
+import android.util.Log
 import com.darleyleal.exitto.data.datastore.LoginPreferences
 import com.darleyleal.exitto.domain.entity.RegisterResult
 import com.darleyleal.exitto.domain.repository.AuthRepository
@@ -14,15 +15,22 @@ import javax.inject.Singleton
 
 /**
  * Firebase implementation of AuthRepository.
- * Handles authentication and local login persistence.
- * Simplified exception handling for better maintainability.
  */
+
+const val TAG = "AUTH_REPOSITORY"
+
 @Singleton
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val loginPreferences: LoginPreferences
 ) : AuthRepository {
 
+    /**
+     * Registers a new user with email and password.
+     * Returns a Flow to handle the registration result reactively.
+     * @param email User's email address
+     * @param password User's password
+     **/
     override suspend fun registerUser(email: String, password: String): Flow<RegisterResult> = flow {
         emit(RegisterResult.Loading)
         val result = try {
@@ -35,10 +43,19 @@ class AuthRepositoryImpl @Inject constructor(
         emit(result)
     }
 
+    /**
+     * Saves user login status to local storage.
+     * @param isLoggedIn Whether the user is logged in
+     * */
     override suspend fun saveLoginStatus(isLoggedIn: Boolean) {
         loginPreferences.setLoggedIn(isLoggedIn)
     }
 
+    /**
+     * Gets the current authenticated user from Firebase.
+     * @return Flow of FirebaseUser or null if not authenticated
+     *
+     * */
     override fun getCurrentUser(): Flow<FirebaseUser?> = flow {
         emit(firebaseAuth.currentUser)
     }
@@ -52,6 +69,7 @@ class AuthRepositoryImpl @Inject constructor(
 
             if (user != null) {
                 saveLoginStatus(true)
+                Log.i(TAG, "User data: ${user.email}\n${user.displayName}\n${user.photoUrl}")
                 RegisterResult.Success
             } else {
                 RegisterResult.Error("Google Sign-In failed: no user returned.")

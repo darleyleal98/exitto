@@ -6,9 +6,12 @@ import com.darleyleal.exitto.data.dao.UserDao
 import com.darleyleal.exitto.data.database.AppDatabase
 import com.darleyleal.exitto.data.datastore.LoginPreferences
 import com.darleyleal.exitto.data.repository.AuthRepositoryImpl
+import com.darleyleal.exitto.data.repository.UserProfileRepositoryImpl
 import com.darleyleal.exitto.domain.repository.AuthRepository
+import com.darleyleal.exitto.domain.repository.UserProfileRepository
 import com.darleyleal.exitto.presentation.utils.GoogleSignInHelper
 import com.darleyleal.exitto.domain.usecase.CheckAuthStatusUseCase
+import com.darleyleal.exitto.domain.usecase.CreateUserProfileUseCase
 import com.darleyleal.exitto.domain.usecase.GoogleSignInUseCase
 import com.darleyleal.exitto.domain.usecase.RegisterUserUseCase
 import com.darleyleal.exitto.domain.usecase.ValidateRegisterFormUseCase
@@ -35,7 +38,7 @@ object AppModule {
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase = Room.databaseBuilder(
         context,
         AppDatabase::class.java,
-        "app_database"
+        "exito.db"
     ).fallbackToDestructiveMigration().build()
 
     @Provides
@@ -58,12 +61,10 @@ object AppModule {
     ): AuthRepository = AuthRepositoryImpl(firebaseAuth, loginPreferences)
 
     @Provides
-    fun provideRegisterUserUseCase(authRepository: AuthRepository): RegisterUserUseCase =
-        RegisterUserUseCase(authRepository)
+    fun provideRegisterUserUseCase(authRepository: AuthRepository): RegisterUserUseCase = RegisterUserUseCase(authRepository)
 
     @Provides
-    fun provideValidateRegisterFormUseCase(): ValidateRegisterFormUseCase =
-        ValidateRegisterFormUseCase()
+    fun provideValidateRegisterFormUseCase(): ValidateRegisterFormUseCase = ValidateRegisterFormUseCase()
 
     @Provides
     fun provideCheckAuthStatusUseCase(
@@ -72,10 +73,14 @@ object AppModule {
     ): CheckAuthStatusUseCase = CheckAuthStatusUseCase(authRepository, loginPreferences)
 
     @Provides
-    fun provideGoogleSignInUseCase(authRepository: AuthRepository): GoogleSignInUseCase =
-        GoogleSignInUseCase(authRepository)
+    fun provideGoogleSignInUseCase(authRepository: AuthRepository): GoogleSignInUseCase = GoogleSignInUseCase(authRepository)
 
     @Provides
-    fun provideGoogleSignInHelper(@ApplicationContext context: Context): GoogleSignInHelper =
-        GoogleSignInHelper(context)
+    fun provideGoogleSignInHelper(@ApplicationContext context: Context): GoogleSignInHelper = GoogleSignInHelper(context)
+
+    @Provides
+    fun provideUserProfileUserUseCase(repository: UserProfileRepository): CreateUserProfileUseCase = CreateUserProfileUseCase(repository)
+
+    @Provides
+    fun providesUserProfileRepository(userDao: UserDao): UserProfileRepository = UserProfileRepositoryImpl(userDao)
 }

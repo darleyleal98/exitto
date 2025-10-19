@@ -6,8 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 /**
  * Repository interface for authentication operations.
- * Following Clean Architecture principle of dependency inversion.
- * The domain layer depends on this abstraction, not on concrete implementations.
  */
 interface AuthRepository {
     
